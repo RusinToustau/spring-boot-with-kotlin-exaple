@@ -19,7 +19,7 @@ class ProductExampleApplicationTests {
 	private lateinit var mockMvc: MockMvc
 
 	@Test
-	fun contextLoads() {
+	fun findAll() {
 		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product"))
 				.andExpect(status().isOk)
 	}
