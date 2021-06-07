@@ -2,6 +2,7 @@ package com.example.productexample
 
 import com.example.productexample.product.domain.Product
 import com.example.productexample.product.service.ProductService
+import com.example.productexample.test_uitils.bodyTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
@@ -42,15 +43,9 @@ class ProductExampleApplicationTests {
 
 	@Test
 	fun findAll() {
-		val jsonResponse = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product"))
+		val products : List<Product> = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product"))
 				.andExpect(status().isOk)
-				.andReturn().response.contentAsString
-
-		val products: List<Product> = mapper.readValue(
-				jsonResponse,
-				mapper.typeFactory.constructCollectionType(List::class.java, Product::class.java)
-		)
-
+				.bodyTo(mapper)
 		assertThat(products, Matchers.`is`(equalTo(productService.findAll())))
 	}
 
