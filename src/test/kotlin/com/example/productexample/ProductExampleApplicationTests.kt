@@ -49,5 +49,21 @@ class ProductExampleApplicationTests {
 		assertThat(products, Matchers.`is`(equalTo(productService.findAll())))
 	}
 
+	@Test
+	fun findById() {
+		val productsFromService = productService.findAll()
+		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
+		val expectedProduct = productsFromService.first()
 
+		val product : Product = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/${expectedProduct.name}"))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assertThat(product, Matchers.`is`(equalTo(expectedProduct)))
+	}
+
+	@Test
+	fun findByIdEmpty() {
+
+	}
 }
