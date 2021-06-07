@@ -4,6 +4,7 @@ import com.example.productexample.product.domain.Product
 import com.example.productexample.product.service.ProductService
 import com.example.productexample.test_uitils.bodyTo
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.jayway.jsonpath.JsonPath
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -55,11 +57,9 @@ class ProductExampleApplicationTests {
 		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
 		val expectedProduct = productsFromService.first()
 
-		val product : Product = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/${expectedProduct.name}"))
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/${expectedProduct.name}"))
 				.andExpect(status().isOk)
-				.bodyTo(mapper)
-
-		assertThat(product, Matchers.`is`(equalTo(expectedProduct)))
+				.andExpect(jsonPath("$.name",Matchers.`is`(equalTo(expectedProduct.name))))
 	}
 
 	@Test
