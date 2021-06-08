@@ -95,6 +95,36 @@ class ProductExampleApplicationTests {
 		assert(!result) { "Should be false" }
 	}
 
+	@Test
+	fun updateSuccessfully() {
+		val product = firstProduct.copy(price = 11.5)
+
+		val result: Boolean = mockMvc
+				.perform(MockMvcRequestBuilders
+						.put(URL)
+						.bodyData(product)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(result)
+	}
+
+	@Test
+	fun updateFail() {
+		val product = Product(name = "Frutilla", price = 20.2)
+
+		val result: Boolean = mockMvc
+				.perform(MockMvcRequestBuilders
+						.put(URL)
+						.bodyData(product)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(!result) { "Should be false" }
+	}
+
 	private val firstProduct : Product by lazy {
 		val productsFromService = productService.findAll()
 		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
