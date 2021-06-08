@@ -2,6 +2,7 @@ package com.example.productexample
 
 import com.example.productexample.product.domain.Product
 import com.example.productexample.product.service.ProductService
+import com.example.productexample.test_uitils.bodyData
 import com.example.productexample.test_uitils.bodyTo
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.hamcrest.CoreMatchers.equalTo
@@ -49,26 +50,22 @@ class ProductExampleApplicationTests {
 		val products : List<Product> = mockMvc.perform(MockMvcRequestBuilders.get(URL))
 				.andExpect(status().isOk)
 				.bodyTo(mapper)
+
 		assertThat(products, Matchers.`is`(equalTo(productService.findAll())))
 	}
 
 	@Test
-	fun findById() {
-		val productsFromService = productService.findAll()
-		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
-		val expectedProduct = productsFromService.first()
+	fun findById() = mockMvc
+			.perform(MockMvcRequestBuilders.get("$URL/${firstProduct.name}"))
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$.name",Matchers.`is`(equalTo(firstProduct.name))))
 
-		mockMvc.perform(MockMvcRequestBuilders.get("$URL/${expectedProduct.name}"))
-				.andExpect(status().isOk)
-				.andExpect(jsonPath("$.name",Matchers.`is`(equalTo(expectedProduct.name))))
-	}
 
 	@Test
-	fun findByIdEmpty() {
-		mockMvc.perform(MockMvcRequestBuilders.get("$URL/${UUID.randomUUID()}"))
-				.andExpect(status().isOk)
-				.andExpect(jsonPath("$").doesNotExist())
-	}
+	fun findByIdEmpty() = mockMvc
+			.perform(MockMvcRequestBuilders.get("$URL/${UUID.randomUUID()}"))
+			.andExpect(status().isOk)
+			.andExpect(jsonPath("$").doesNotExist())
 
 	@Test
 	fun saveSuccessfully() {
@@ -77,12 +74,31 @@ class ProductExampleApplicationTests {
 		val result: Boolean = mockMvc
 				.perform(MockMvcRequestBuilders
 						.post(URL)
-						.content(mapper.writeValueAsBytes(product))
+						.bodyData(product)
 						.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk)
 				.bodyTo(mapper)
 
 		assert(result)
+	}
+
+	@Test
+	fun saveFail() {
+		val result: Boolean = mockMvc
+				.perform(MockMvcRequestBuilders
+						.post(URL)
+						.bodyData(firstProduct)
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(!result) { "Should be false" }
+	}
+
+	private val firstProduct : Product by lazy {
+		val productsFromService = productService.findAll()
+		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
+		productsFromService.first()
 	}
 
 	companion object {
