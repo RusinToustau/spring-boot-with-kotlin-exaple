@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.MediaType
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
@@ -45,7 +46,7 @@ class ProductExampleApplicationTests {
 
 	@Test
 	fun findAll() {
-		val products : List<Product> = mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product"))
+		val products : List<Product> = mockMvc.perform(MockMvcRequestBuilders.get(URL))
 				.andExpect(status().isOk)
 				.bodyTo(mapper)
 		assertThat(products, Matchers.`is`(equalTo(productService.findAll())))
@@ -57,15 +58,34 @@ class ProductExampleApplicationTests {
 		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
 		val expectedProduct = productsFromService.first()
 
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/${expectedProduct.name}"))
+		mockMvc.perform(MockMvcRequestBuilders.get("$URL/${expectedProduct.name}"))
 				.andExpect(status().isOk)
 				.andExpect(jsonPath("$.name",Matchers.`is`(equalTo(expectedProduct.name))))
 	}
 
 	@Test
 	fun findByIdEmpty() {
-		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/${UUID.randomUUID()}"))
+		mockMvc.perform(MockMvcRequestBuilders.get("$URL/${UUID.randomUUID()}"))
 				.andExpect(status().isOk)
 				.andExpect(jsonPath("$").doesNotExist())
+	}
+
+	@Test
+	fun saveSuccessfully() {
+		val product = Product(name = "Frutilla", price = 20.2)
+
+		val result: Boolean = mockMvc
+				.perform(MockMvcRequestBuilders
+						.post(URL)
+						.content(mapper.writeValueAsBytes(product))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(result)
+	}
+
+	companion object {
+		private const val URL = "/api/v1/product"
 	}
 }
