@@ -4,7 +4,6 @@ import com.example.productexample.product.domain.Product
 import com.example.productexample.product.service.ProductService
 import com.example.productexample.test_uitils.bodyTo
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.jayway.jsonpath.JsonPath
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers
@@ -22,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.web.context.WebApplicationContext
+import java.util.*
 
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
@@ -64,6 +64,8 @@ class ProductExampleApplicationTests {
 
 	@Test
 	fun findByIdEmpty() {
-
+		mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/product/${UUID.randomUUID()}"))
+				.andExpect(status().isOk)
+				.andExpect(jsonPath("$").doesNotExist())
 	}
 }
