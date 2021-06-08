@@ -125,6 +125,34 @@ class ProductExampleApplicationTests {
 		assert(!result) { "Should be false" }
 	}
 
+	@Test
+	fun deleteByIdSuccessfully() {
+		val product = firstProduct
+
+		val result: Boolean = mockMvc
+				.perform(MockMvcRequestBuilders
+						.delete("$URL/${product.name}")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(result)
+	}
+
+	@Test
+	fun deleteByIdFail() {
+		val product = Product(name = "Frutilla", price = 20.2)
+
+		val result: Boolean = mockMvc
+				.perform(MockMvcRequestBuilders
+						.delete("$URL/${product.name}")
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk)
+				.bodyTo(mapper)
+
+		assert(!result) { "Should be false" }
+	}
+
 	private val firstProduct : Product by lazy {
 		val productsFromService = productService.findAll()
 		assert(productsFromService.isNotEmpty()){ "Should not be empty" }
