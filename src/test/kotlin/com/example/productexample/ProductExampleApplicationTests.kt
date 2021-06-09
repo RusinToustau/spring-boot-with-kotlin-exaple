@@ -64,7 +64,7 @@ class ProductExampleApplicationTests {
 	@Test
 	fun findByIdEmpty() = mockMvc
 			.perform(MockMvcRequestBuilders.get("$URL/${UUID.randomUUID()}"))
-			.andExpect(status().isOk)
+			.andExpect(status().isNoContent)
 			.andExpect(jsonPath("$").doesNotExist())
 
 	@Test
@@ -89,7 +89,7 @@ class ProductExampleApplicationTests {
 						.post(URL)
 						.bodyData(firstProduct)
 						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk)
+				.andExpect(status().isConflict)
 				.bodyTo(mapper)
 
 		assert(!result) { "Should be false" }
@@ -119,7 +119,7 @@ class ProductExampleApplicationTests {
 						.put(URL)
 						.bodyData(product)
 						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk)
+				.andExpect(status().isNotModified)
 				.bodyTo(mapper)
 
 		assert(!result) { "Should be false" }
@@ -147,7 +147,7 @@ class ProductExampleApplicationTests {
 				.perform(MockMvcRequestBuilders
 						.delete("$URL/${product.name}")
 						.contentType(MediaType.APPLICATION_JSON))
-				.andExpect(status().isOk)
+				.andExpect(status().isNotFound)
 				.bodyTo(mapper)
 
 		assert(!result) { "Should be false" }
