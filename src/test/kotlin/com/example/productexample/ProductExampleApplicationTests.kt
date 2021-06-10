@@ -96,6 +96,18 @@ class ProductExampleApplicationTests {
 	}
 
 	@Test
+	fun saveCheckRules() {
+		mockMvc
+				.perform(MockMvcRequestBuilders
+						.post(URL)
+						.bodyData(data = Product(name = "", price = -1.0))
+						.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isBadRequest)
+				.andExpect(jsonPath("$.name").exists())
+				.andExpect(jsonPath("$.price").exists())
+	}
+
+	@Test
 	fun updateSuccessfully() {
 		val product = firstProduct.copy(price = 11.5)
 
