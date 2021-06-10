@@ -1,6 +1,13 @@
 package com.example.productexample.product.domain
 
-data class Product(val name: String, val price: Double) {
+import javax.validation.constraints.Min
+import javax.validation.constraints.Size
+
+data class Product(
+        @get:Size(min = 3, max = 20)
+        val name: String,
+        @get:Min(value = 0)
+        val price: Double) {
 
     override fun equals(other: Any?): Boolean {
         other?.let {
