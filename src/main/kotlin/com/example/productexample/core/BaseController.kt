@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.status
 import org.springframework.web.bind.annotation.*
+import javax.validation.Valid
 
 abstract class BaseController<T, ID>(protected val baseCrud: BaseCrud<T, ID>) {
 
@@ -20,7 +21,7 @@ abstract class BaseController<T, ID>(protected val baseCrud: BaseCrud<T, ID>) {
     }
 
     @PostMapping
-    fun save(@RequestBody body: T): ResponseEntity<Boolean> =
+    fun save(@Valid @RequestBody body: T): ResponseEntity<Boolean> =
             if (baseCrud.save(body))
                 status(HttpStatus.OK).body(true)
             else

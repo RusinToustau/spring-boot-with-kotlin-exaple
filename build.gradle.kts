@@ -22,6 +22,9 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+	// -------------------- Validation javax libraries for spring boot -------------------- //
+	implementation ("org.springframework.boot:spring-boot-starter-validation:2.2.6.RELEASE")
+
 	// -------------------- Documentation -------------------- //
 	implementation ("io.springfox:springfox-boot-starter:3.0.0")
 
