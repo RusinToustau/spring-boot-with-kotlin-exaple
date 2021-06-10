@@ -1,5 +1,6 @@
 package com.example.productexample.core
 
+import io.swagger.annotations.ApiOperation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.http.ResponseEntity.status
@@ -7,6 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 abstract class BaseController<T, ID>(protected val baseCrud: BaseCrud<T, ID>) {
 
+    @ApiOperation("Get all Entities")
     @GetMapping
     fun findAll() = baseCrud.findAll()
 
