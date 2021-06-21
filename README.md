@@ -1,15 +1,46 @@
-#ProductExample
+# ProductExample
 
 
-###Api Documentation
+### Api Documentation : Swagger2
 
 Swagger2
 http://localhost:8080/swagger-ui/
 
 `````@ApiOperation("Get all Entities")`````
 
+Esta herramienta permite documentar la api de manera sencilla. Con tan solo importar su dependencia podremos obtener y agregar una configuración automáticamente tendremos ducuemtados los endepoints y autogenerados curls de ejemplo.
 
-###Validations
+````
+	// -------------------- Documentation -------------------- //
+	implementation ("io.springfox:springfox-boot-starter:3.0.0")
+ 
+````
+
+````
+@Configuration
+class SpringFoxConfig {
+
+    @Bean
+    fun api(): Docket = Docket(DocumentationType.SWAGGER_2)
+            .select()
+            .paths(PathSelectors.any())
+            .build()
+
+}
+````
+
+Finalmente en app deberemos agregar la notaction `@EnableSwagger2`, en nuestro caso : 
+
+````
+@SpringBootApplication
+@EnableSwagger2
+class ProductExampleApplication
+  ...
+
+````
+
+
+### Validations
 
 [How to use Java Bean Validation in Spring Boot](https://nullbeans.com/how-to-use-java-bean-validation-in-spring-boot/)
 
@@ -32,6 +63,9 @@ http://localhost:8080/swagger-ui/
         ...
     }
 ````
+
+### Manejo de Errores
+
 ````
 @ControllerAdvice
 class RestResponseEntityErrorHandler: ResponseEntityExceptionHandler() {
