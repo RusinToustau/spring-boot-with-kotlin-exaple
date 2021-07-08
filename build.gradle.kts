@@ -5,6 +5,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.0.11.RELEASE"
 	kotlin("jvm") version "1.5.10"
 	kotlin("plugin.spring") version "1.5.10"
+	kotlin("plugin.jpa") version "1.3.61"
 }
 
 group = "com.example"
@@ -24,6 +25,10 @@ dependencies {
 
 	// -------------------- Validation javax libraries for spring boot -------------------- //
 	implementation ("org.springframework.boot:spring-boot-starter-validation:2.2.6.RELEASE")
+
+	// -------------------- DataBase - Spring Data JPA - H2 -------------------- //
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly ("com.h2database:h2")
 
 	// -------------------- Documentation -------------------- //
 	implementation ("io.springfox:springfox-boot-starter:3.0.0")

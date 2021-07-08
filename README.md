@@ -1,5 +1,9 @@
 # ProductExample
 
+### Init project
+
+Para inicializar un proyecto con spring boot la recomendación es entrar a este [link](https://start.spring.io/)
+
 
 ### Api Documentation : Swagger2
 
@@ -84,5 +88,20 @@ class RestResponseEntityErrorHandler: ResponseEntityExceptionHandler() {
     }
 }
 ````
+
+### Databa base integration
+Spring Data JPA
+[Documentation](https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.jpa)
+```
+       // Add jpa plugin
+	kotlin("plugin.jpa") version "1.3.61"
+
+
+	// -------------------- DataBase - Spring Data JPA - H2 -------------------- //
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	runtimeOnly ("com.h2database:h2")
+	
+```
+
 
 
