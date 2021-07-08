@@ -21,24 +21,12 @@ abstract class BaseController<T, ID>(protected val baseCrud: BaseCrud<T, ID>) {
     }
 
     @PostMapping
-    fun save(@Valid @RequestBody body: T): ResponseEntity<Boolean> =
-            if (baseCrud.save(body))
-                status(HttpStatus.OK).body(true)
-            else
-                status(HttpStatus.CONFLICT).body(false)
+    fun save(@Valid @RequestBody body: T) = baseCrud.save(body)
 
     @PutMapping
-    fun update(@RequestBody body: T): ResponseEntity<Boolean> =
-            if (baseCrud.update(body))
-                status(HttpStatus.OK).body(true)
-            else
-                status(HttpStatus.NOT_MODIFIED).body(false)
+    fun update(@RequestBody body: T) = baseCrud.update(body)
 
     @DeleteMapping("/{id}")
-    fun delete(@PathVariable id: ID): ResponseEntity<Boolean> =
-            if (baseCrud.deleteById(id))
-                status(HttpStatus.OK).body(true)
-            else
-                status(HttpStatus.NOT_FOUND).body(false)
+    fun delete(@PathVariable id: ID) = baseCrud.deleteById(id)
 
 }

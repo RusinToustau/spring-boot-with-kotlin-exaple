@@ -1,5 +1,6 @@
 package com.example.productexample.core
 
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import java.io.FileNotFoundException
+import javax.persistence.EntityNotFoundException
 
 @ControllerAdvice
 class RestResponseEntityErrorHandler: ResponseEntityExceptionHandler() {
@@ -21,8 +23,11 @@ class RestResponseEntityErrorHandler: ResponseEntityExceptionHandler() {
                 .body(result)
     }
 
-    @ExceptionHandler(FileNotFoundException::class)
-    fun customExceptionExample(fileNotFoundException: FileNotFoundException): ResponseEntity<String> {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("UPPS!")
+    @ExceptionHandler(DuplicateKeyException::class, EntityNotFoundException::class)
+    fun handleJpa(e: Exception): ResponseEntity<ApiResponseDTO> {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ApiResponseDTO(
+                title = e.javaClass.simpleName,
+                message = e.localizedMessage
+        ))
     }
 }
